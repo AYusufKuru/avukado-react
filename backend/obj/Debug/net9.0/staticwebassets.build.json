@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "rPvtVu5WxnrrS81M6MrmZDi8+pS1i+FTBdMbKPOaOho=",
+  "Source": "Avukado.Api",
+  "BasePath": "_content/Avukado.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
