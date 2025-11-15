@@ -1,17 +1,17 @@
 import express from "express";
-import { ENV } from "./lib/env.js";
+import { ENV } from "./src/lib/env.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import fs from "fs";
-import { connectDB } from "./lib/db.js";
-import { errorHandler } from "./middleware/errorHandler.js";
+import { connectDB } from "./src/lib/db.js";
+import { errorHandler } from "./src/middleware/errorHandler.js";
 
 // Routes
-import authRoutes from "./routes/authRoutes.js";
-import adsRoutes from "./routes/adsRoutes.js";
-import lawyersRoutes from "./routes/lawyersRoutes.js";
+import authRoutes from "./src/routes/authRoutes.js";
+import adsRoutes from "./src/routes/adsRoutes.js";
+import lawyersRoutes from "./src/routes/lawyersRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,7 +52,7 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 if (ENV.NODE_ENV === "production") {
     console.log("🔥 Production mode: Frontend serve ediliyor");
 
-    const FRONTEND_DIST = path.join(__dirname, "../../frontend/dist");
+    const FRONTEND_DIST = path.join(__dirname, "../frontend/dist");
     console.log("📁 Frontend dist path:", FRONTEND_DIST);
 
     if (!fs.existsSync(FRONTEND_DIST)) {
@@ -93,7 +93,7 @@ app.get("/api/health", (req, res) => {
 if (ENV.NODE_ENV === "production") {
     app.use((req, res, next) => {
         // API route değilse frontend'e yönlendir
-        const indexPath = path.join(__dirname, "../../frontend/dist/index.html");
+        const indexPath = path.join(__dirname, "../frontend/dist/index.html");
         if (fs.existsSync(indexPath)) {
             res.sendFile(indexPath, (err) => {
                 if (err) {
