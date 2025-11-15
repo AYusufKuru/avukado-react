@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { connectDB } from "./src/lib/db.js";
 import { ENV } from "./src/lib/env.js";
-import { errorHandler } from "./src/middleware/errorHandler.js";
 
 // Routes
 import authRoutes from "./src/routes/authRoutes.js";
@@ -65,9 +64,6 @@ if (ENV.NODE_ENV === "production") {
         res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
     });
 }
-
-// Error Handler
-app.use(errorHandler);
 
 // Server Start
 app.listen(PORT, () => {
