@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { endpoints } from "../../services/api";
+import { useRegisterMutation } from "../../store/api/authApi";
 
 export default function Register() {
     const nav = useNavigate();
-    const [role, setRole] = useState("client"); // "client" | "lawyer"
+    const [role, setRole] = useState("client"); // "client" | "lawyer" (lawyer şu anda kapalı)
     const [err, setErr] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [register, { isLoading }] = useRegisterMutation();
 
     const [form, setForm] = useState({
         name: "",
@@ -41,10 +41,9 @@ export default function Register() {
         setErr("");
         const v = validate();
         if (v) return setErr(v);
-        setLoading(true);
 
         try {
-            let res;
+            let payload;
             if (role === "lawyer") {
                 // Avukat için dosyalı kayıt
                 const fd = new FormData();
@@ -56,28 +55,27 @@ export default function Register() {
                 fd.append("baroNo", form.baroNo);
                 fd.append("idFront", form.idFront);
                 fd.append("idBack", form.idBack);
-                // axios kullanıyorsan endpoints.register(fd) yeter; header otomatik "multipart/form-data"
-                res = await endpoints.register(fd);
+                payload = fd;
             } else {
                 // Müvekkil için düz JSON
-                res = await endpoints.register({
+                payload = {
                     role,
                     name: form.name,
                     email: form.email,
                     password: form.password,
-                });
+                };
             }
 
-            const { data } = res;
-            localStorage.setItem("avukado_token", data.token);
-            localStorage.setItem("avukado_user", JSON.stringify(data.user));
-            localStorage.setItem("avukado_role", role);
+            const result = await register(payload).unwrap();
 
-            nav(role === "lawyer" ? "/panel/avukat" : "/panel/muvekkil");
+            if (result.token) {
+                localStorage.setItem("avukado_role", role);
+                nav(role === "lawyer" ? "/panel/avukat" : "/panel/muvekkil");
+            } else {
+                throw new Error("Kayıt başarısız: Token alınamadı.");
+            }
         } catch (e2) {
-            setErr(e2?.response?.data?.message || e2?.response?.data || "Kayıt başarısız");
-        } finally {
-            setLoading(false);
+            setErr(e2?.data?.error || e2?.error || e2?.message || "Kayıt başarısız");
         }
     };
 
@@ -100,10 +98,11 @@ export default function Register() {
                 <button
                     type="button"
                     onClick={() => setRole("lawyer")}
-                    className={`h-10 rounded-xl border ${role === "lawyer" ? "bg-emerald-50 border-emerald-300 text-emerald-700" : "border-slate-200"
-                        }`}
+                    disabled
+                    className="h-10 rounded-xl border border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed opacity-50"
+                    title="Avukat kaydı şu anda kapalıdır"
                 >
-                    Avukat
+                    Avukat (Kapalı)
                 </button>
             </div>
 
@@ -179,10 +178,11 @@ export default function Register() {
                 )}
 
                 <button
-                    disabled={loading}
+                    type="submit"
+                    disabled={isLoading}
                     className="w-full rounded-lg bg-teal-700 text-white p-3 disabled:opacity-70"
                 >
-                    {loading ? "Gönderiliyor..." : "Kayıt Ol"}
+                    {isLoading ? "Gönderiliyor..." : "Kayıt Ol"}
                 </button>
             </form>
 

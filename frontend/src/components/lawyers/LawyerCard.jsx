@@ -1,4 +1,4 @@
-function LawyerCard({ title, area, sub, city, details, fileCount, fee, showPlaceholder }) {
+export default function LawyerCard({ title, area, sub, city, details, fileCount, fee, showPlaceholder }) {
     const safeTitle = (title || "").trim() || "(Başlık girilmedi)";
     const chip = [area, sub].filter(Boolean).join(" / ");
     const excerpt =

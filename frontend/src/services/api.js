@@ -1,12 +1,13 @@
 // src/services/api.js
 
-// .env yoksa .NET dev portuna düş (5240). Sondaki '/' varsa kaldır.
-const RAW_BASE = (import.meta.env.VITE_API_URL || "http://localhost:5240").trim();
+// .env yoksa Node.js Express backend portuna düş (3000). Sondaki '/' varsa kaldır.
+const RAW_BASE = (import.meta.env.VITE_API_URL || "http://localhost:3000").trim();
 const BASE_URL = RAW_BASE.replace(/\/+$/, "");
 
 export const endpoints = {
     login: "/api/Auth/login",
     register: "/api/Auth/register",
+    profile: "/api/Auth/profile",
     ads: "/api/Ads",
     lawyers: "/api/Lawyers",
     adProposals: (id) => `/api/Ads/${id}/proposals`,

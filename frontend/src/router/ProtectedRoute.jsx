@@ -1,7 +1,9 @@
 // src/router/ProtectedRoute.jsx
 import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../store/slices/authSlice";
 
 export default function ProtectedRoute() {
-    const token = localStorage.getItem("avukado_token");
-    return token ? <Outlet /> : <Navigate to="/giris" replace />;
+    const isAuthenticated = useSelector(selectIsAuthenticated);
+    return isAuthenticated ? <Outlet /> : <Navigate to="/giris" replace />;
 }

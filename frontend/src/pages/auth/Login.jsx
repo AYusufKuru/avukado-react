@@ -1,39 +1,33 @@
 // src/pages/auth/Login.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { postJson, endpoints } from "../../services/api";
+import { useLoginMutation } from "../../store/api/authApi";
 
 export default function Login() {
     const nav = useNavigate();
     const [form, setForm] = useState({ email: "", password: "" });
     const [err, setErr] = useState("");
+    const [login, { isLoading }] = useLoginMutation();
 
     const submit = async (e) => {
         e.preventDefault();
         setErr("");
 
         try {
-            // endpoints.login sadece path, istek postJson ile atılır
-            const resp = await postJson(endpoints.login, {
+            const result = await login({
                 email: form.email,
                 password: form.password,
-            });
+            }).unwrap();
 
-            // Backend bazen text/plain döndürüyor olabilir; esnek kontrol:
-            const token =
-                resp?.token ?? resp?.Token ?? (typeof resp === "string" ? resp : "");
-            if (!token) throw new Error("Token alınamadı.");
-
-            localStorage.setItem("avukado_token", token);
-            if (resp?.user) {
-                localStorage.setItem("avukado_user", JSON.stringify(resp.user));
-                if (resp.user.role) localStorage.setItem("avukado_role", resp.user.role);
+            if (!result.token) {
+                throw new Error("Token alınamadı.");
             }
 
-            const role = localStorage.getItem("avukado_role") || "client";
+            // Role kontrolü - müvekkil her zaman müvekkil paneline yönlendirilir
+            const role = result.user?.role || localStorage.getItem("avukado_role") || "client";
             nav(role === "lawyer" ? "/panel/avukat" : "/panel/muvekkil");
         } catch (ex) {
-            setErr(ex?.message || "Giriş yapılamadı");
+            setErr(ex?.data?.error || ex?.error || ex?.message || "Giriş yapılamadı");
         }
     };
 
@@ -59,8 +53,12 @@ export default function Login() {
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
-                <button className="w-full rounded-lg bg-teal-700 text-white p-3">
-                    Giriş Yap
+                <button 
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full rounded-lg bg-teal-700 text-white p-3 disabled:opacity-70"
+                >
+                    {isLoading ? "Giriş yapılıyor..." : "Giriş Yap"}
                 </button>
             </form>
             <p className="text-sm mt-3">

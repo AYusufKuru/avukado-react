@@ -1,16 +1,18 @@
 // src/pages/Home.jsx
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "../store/slices/authSlice";
 import Chip from "../components/ui/Chip";
 import SectionTitle from "../components/ui/SectionTitle";
 import Blurry from "../components/ui/Blurry";
 
 export default function Home() {
-    const { pathname, hash } = useLocation();
+    const { hash } = useLocation();
 
     // giriş kontrolü → ilan aç butonunun hedefi
-    const token = useMemo(() => localStorage.getItem("avukado_token"), [pathname]);
-    const ilanAcPath = token ? "/ilan/ac" : "/giris";
+    const isAuthenticated = useSelector(selectIsAuthenticated);
+    const ilanAcPath = isAuthenticated ? "/ilan/ac" : "/giris";
 
     // navbar #hash ile smooth scroll
     useEffect(() => {

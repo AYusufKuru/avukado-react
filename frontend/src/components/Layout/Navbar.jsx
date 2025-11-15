@@ -1,22 +1,24 @@
 // src/components/Layout/Navbar.jsx
-import { useMemo, useState } from "react";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { selectIsAuthenticated, selectCurrentUser } from "../../store/slices/authSlice";
+import { logout } from "../../store/slices/authSlice";
 
 const cx = (...a) => a.filter(Boolean).join(" ");
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const nav = useNavigate();
-    const { pathname } = useLocation();
-
-    const token = useMemo(() => localStorage.getItem("avukado_token"), [pathname]);
-    const authed = Boolean(token);
+    const dispatch = useDispatch();
+    const authed = useSelector(selectIsAuthenticated);
+    const currentUser = useSelector(selectCurrentUser);
     const ilanAcPath = authed ? "/ilan/ac" : "/giris";
+    const panelPath = currentUser?.role === "lawyer" ? "/panel/avukat" : "/panel/muvekkil";
+    const panelLabel = currentUser?.role === "lawyer" ? "Avukat Paneli" : "Müvekkil Paneli";
 
-    const logout = () => {
-        localStorage.removeItem("avukado_token");
-        localStorage.removeItem("avukado_user");
-        localStorage.removeItem("avukado_role");
+    const handleLogout = () => {
+        dispatch(logout());
         setOpen(false);
         nav("/giris");
     };
@@ -62,7 +64,7 @@ export default function Navbar() {
 
             {authed && (
                 <NavLink
-                    to="/panel/avukat"
+                    to={panelPath}
                     onClick={onClick}
                     className={({ isActive }) =>
                         cx(
@@ -71,7 +73,7 @@ export default function Navbar() {
                         )
                     }
                 >
-                    Avukat Paneli
+                    {panelLabel}
                 </NavLink>
             )}
         </div>
@@ -116,13 +118,13 @@ export default function Navbar() {
                     ) : (
                         <>
                             <Link
-                                to="/panel/avukat"
+                                to={panelPath}
                                 className="px-4 py-2 rounded-xl bg-emerald-700 text-white hover:bg-emerald-800"
                             >
-                                Avukat Paneli
+                                {panelLabel}
                             </Link>
                             <button
-                                onClick={logout}
+                                onClick={handleLogout}
                                 className="px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50"
                             >
                                 Çıkış
@@ -169,14 +171,17 @@ export default function Navbar() {
                         ) : (
                             <>
                                 <Link
-                                    to="/panel/avukat"
+                                    to={panelPath}
                                     onClick={() => setOpen(false)}
                                     className="px-4 py-2 rounded-xl bg-emerald-700 text-white hover:bg-emerald-800"
                                 >
-                                    Avukat Paneli
+                                    {panelLabel}
                                 </Link>
                                 <button
-                                    onClick={logout}
+                                    onClick={() => {
+                                        handleLogout();
+                                        setOpen(false);
+                                    }}
                                     className="px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50"
                                 >
                                     Çıkış

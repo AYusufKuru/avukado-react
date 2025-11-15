@@ -1,5 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Upload, Trash2, Info, FileText, CheckCircle2, XCircle, Building2, Gavel } from "lucide-react";
+import { useCreateAdMutation } from "../store/api/adsApi";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -95,6 +97,20 @@ const AREA_TO_SUBS = {
 
 const allAreas = Object.keys(AREA_TO_SUBS);
 
+/* Alan adından backend category'ye mapping */
+const AREA_TO_CATEGORY = {
+    "Aile Hukuku": "aile",
+    "Ceza Hukuku": "ceza",
+    "Ticaret Hukuku": "ticaret",
+    "Miras Hukuku": "miras",
+    "İş Hukuku": "is-hukuku",
+    "İcra-İflas Hukuku": "icra-iflas",
+    "Gayrimenkul Hukuku": "gayrimenkul",
+    "Bilişim Hukuku": "bilisim",
+    "Tüketici Hukuku": "tuketici",
+    "Vergi Hukuku": "vergi",
+};
+
 /* 5) Alan/Alt başlıktan "kategori" seçimi (tarife anahtarları) */
 function pickTariffKey(area, sub) {
     const a = (area || "").toLowerCase();
@@ -178,6 +194,8 @@ export default function IlanOlustur() {
     const [files, setFiles] = useState([]);
     const [submitted, setSubmitted] = useState(false);
     const [toast, setToast] = useState(null);
+    const [createAd, { isLoading: isCreating }] = useCreateAdMutation();
+    const navigate = useNavigate();
 
     const titleWords = useMemo(() => wordCount(title), [title]);
     const titleTooLong = titleWords > 15;
@@ -199,12 +217,30 @@ export default function IlanOlustur() {
         setFiles((prev) => prev.filter((_, i) => i !== idx));
     }
 
-    function submitForm(e) {
+    async function submitForm(e) {
         e.preventDefault();
         if (!valid) return setToast({ type: "err", text: "Zorunlu alanları kontrol edin." });
-        setSubmitted(true);
-        setToast({ type: "ok", text: "İlan başarıyla kaydedildi." });
-        setTimeout(() => setToast(null), 3000);
+        
+        try {
+            const category = AREA_TO_CATEGORY[area] || "aile";
+            const adData = {
+                title: title.trim(),
+                description: details.trim(),
+                category,
+                city: city.trim(),
+                documents: files.map(f => ({ name: f.name })),
+            };
+
+            await createAd(adData).unwrap();
+            setSubmitted(true);
+            setToast({ type: "ok", text: "İlan başarıyla kaydedildi." });
+            setTimeout(() => {
+                setToast(null);
+                navigate("/ilanlar");
+            }, 2000);
+        } catch (error) {
+            setToast({ type: "err", text: error?.error || "İlan kaydedilirken bir hata oluştu." });
+        }
     }
 
     return (
@@ -375,11 +411,11 @@ export default function IlanOlustur() {
                             <div className="mt-6 flex items-center gap-3">
                                 <button
                                     type="submit"
-                                    disabled={!valid}
-                                    className={`px-5 py-2 rounded-xl text-white shadow-md transition ${valid ? "bg-green-600 hover:bg-green-700" : "bg-green-300 cursor-not-allowed"
+                                    disabled={!valid || isCreating}
+                                    className={`px-5 py-2 rounded-xl text-white shadow-md transition ${valid && !isCreating ? "bg-green-600 hover:bg-green-700" : "bg-green-300 cursor-not-allowed"
                                         }`}
                                 >
-                                    İlanı Kaydet
+                                    {isCreating ? "Kaydediliyor..." : "İlanı Kaydet"}
                                 </button>
                                 <span className="text-sm text-neutral-500">
                                     Gerekli alanlar: Şehir, Uzmanlık, Alt Başlık, Detaylar.
@@ -425,7 +461,7 @@ export default function IlanOlustur() {
                 </div>
 
                 {/* Lawyer Card Preview */}
-                {/* <section className="mt-10">
+                <section className="mt-10">
                     <h3 className="text-lg font-semibold mb-3">Avukat Görünümü (Örnek Kart)</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <LawyerCard
@@ -439,7 +475,7 @@ export default function IlanOlustur() {
                             showPlaceholder={!submitted}
                         />
                     </div>
-                </section> */}
+                </section>
             </main>
 
             <footer className="mt-16 py-10 border-t border-neutral-200 bg-white/60">

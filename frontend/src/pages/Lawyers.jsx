@@ -1,18 +1,13 @@
-import { useEffect, useState } from "react";
-import { endpoints } from "../services/api";
+import { useState } from "react";
+import { useGetLawyersQuery } from "../store/api/lawyersApi";
 
 export default function Lawyers() {
     const [q, setQ] = useState("");
     const [city, setCity] = useState("");
     const [tag, setTag] = useState("");
-    const [list, setList] = useState([]);
-
-    const load = async () => {
-        const { data } = await endpoints.getLawyers({ q, city, tag });
-        setList(data);
-    };
-
-    useEffect(() => { load(); }, []);
+    
+    const { data, isLoading, error, refetch } = useGetLawyersQuery({ q, city, tag });
+    const list = data?.data || data || [];
 
     return (
         <div className="space-y-6">
@@ -23,9 +18,12 @@ export default function Lawyers() {
                     {["İstanbul", "Ankara", "İzmir", "Bursa", "Gaziantep"].map(c => <option key={c}>{c}</option>)}
                 </select>
                 <input className="border rounded-lg p-3" placeholder="Uzmanlık (örn: Aile Hukuku)" value={tag} onChange={e => setTag(e.target.value)} />
-                <button onClick={load} className="rounded-lg bg-teal-700 text-white p-3">Filtrele</button>
+                <button onClick={() => refetch()} className="rounded-lg bg-teal-700 text-white p-3">Filtrele</button>
             </div>
 
+            {isLoading && <div className="text-center py-8">Yükleniyor...</div>}
+            {error && <div className="text-center py-8 text-red-600">Hata: {error?.data?.error || error?.error || "Avukatlar yüklenemedi"}</div>}
+            {!isLoading && !error && list.length === 0 && <div className="text-center py-8">Avukat bulunamadı.</div>}
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
                 {list.map(l => (
                     <div key={l.id} className="bg-white border rounded-2xl p-4">
