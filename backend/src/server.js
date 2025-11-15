@@ -50,6 +50,20 @@ app.use(cookieParser());
 // Uploads klasörünü static olarak serve et
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
+// Production'da frontend static dosyalarını serve et (API route'larından ÖNCE)
+if (ENV.NODE_ENV === "production") {
+    console.log("🔥 Production mode: Frontend serve ediliyor");
+    const frontendDistPath = path.join(__dirname, "../../frontend/dist");
+    console.log("📁 Frontend dist path:", frontendDistPath);
+    
+    // Static dosyaları serve et
+    app.use(express.static(frontendDistPath, {
+        maxAge: "1d", // Cache için
+        etag: true,
+        lastModified: true,
+    }));
+}
+
 // API Routes
 app.use("/api/Auth", authRoutes);
 app.use("/api/Ads", adsRoutes);
@@ -60,23 +74,24 @@ app.get("/api/health", (req, res) => {
     res.json({ status: "OK", message: "Server is running" });
 });
 
-// make ready for deployment
-if (process.env.NODE_ENV === "production") {
-
-    console.log("🔥 Production mode: Frontend serve ediliyor");
-
-    app.use(express.static(path.join(__dirname, "../../frontend/dist")));
-
-    // SPA fallback (Express 5 alpha)
+// Production'da SPA fallback (API route'larından SONRA)
+if (ENV.NODE_ENV === "production") {
+    app.use((req, res, next) => {
+        // API route'ları değilse frontend'e yönlendir
+        const indexPath = path.join(__dirname, "../../frontend/dist/index.html");
+        res.sendFile(indexPath, (err) => {
+            if (err) {
+                console.error("❌ Frontend index.html bulunamadı:", err);
+                res.status(500).json({ message: "Frontend dosyası bulunamadı" });
+            }
+        });
+    });
+} else {
+    // Development'ta 404 handler
     app.use((req, res) => {
-        res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"));
+        res.status(404).json({ message: "Route bulunamadı" });
     });
 }
-
-// 404 handler
-app.use((req, res) => {
-    res.status(404).json({ message: "Route bulunamadı" });
-});
 
 // Error handler (en sonda olmalı)
 app.use(errorHandler);
