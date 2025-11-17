@@ -499,53 +499,57 @@ function Row({ label, value, bold = false }) {
 function LawyerCard({ title, area, sub, city, details, fileCount, fee, showPlaceholder }) {
     const safeTitle = (title || "").trim() || "İlan Başlığı";
     const chip = [area, sub].filter(Boolean).join(" / ");
-    const excerpt =
-        (details || "Dava detay önizlemesi – müvekkilin paylaştığı açıklama burada özetlenecek.").slice(0, 200) +
-        (details && details.length > 200 ? "…" : "");
+    const fullDetails = details || "Dava detay önizlemesi – müvekkilin paylaştığı açıklama burada özetlenecek.";
 
     return (
-        <div className="bg-white rounded-2xl shadow-md border border-neutral-200 p-5 flex flex-col">
-            <div className="flex items-start justify-between gap-3">
-                <h4 className="font-semibold text-neutral-900 line-clamp-2 pr-2">{safeTitle}</h4>
-                {chip && (
-                    <span className="shrink-0 inline-flex items-center rounded-full bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 text-xs">
+        <div className="bg-white rounded-2xl shadow-md border border-neutral-200 p-5 flex flex-col h-full">
+            {/* Başlık - Tam genişlik */}
+            <h4 className="font-semibold text-neutral-900 break-words mb-2">{safeTitle}</h4>
+            
+            {/* Chip - Başlığın altında, wrap olabilir */}
+            {chip && (
+                <div className="mb-2">
+                    <span className="inline-flex items-center rounded-full bg-green-50 text-green-700 border border-green-200 px-2 py-0.5 text-xs break-words">
                         {chip}
                     </span>
-                )}
-            </div>
+                </div>
+            )}
 
-            <div className="mt-2 text-sm text-neutral-600 flex items-center gap-2">
+            <div className="mt-1 text-sm text-neutral-600 flex items-center gap-2 flex-wrap">
                 <span>{city || "Şehir belirtilmedi"}</span>
                 <span>•</span>
                 <span>Belge: {fileCount}</span>
             </div>
 
-            <p className="mt-3 text-sm text-neutral-800 leading-6">{excerpt}</p>
+            {/* Açıklama - Tüm metin gösteriliyor, alt satıra geçiyor */}
+            <p className="mt-3 text-sm text-neutral-800 leading-relaxed break-words whitespace-pre-wrap">{fullDetails}</p>
 
-            <div className="mt-4 flex items-center justify-between gap-3">
-                <div className="text-sm text-neutral-700">
-                    <div>
-                        <span className="text-neutral-500">Mahkeme:</span>{" "}
-                        <span className="font-medium">{fee?.mahkemeGiderleri || "—"}</span>
+            {/* Ücret Bilgileri - Daha kompakt düzen */}
+            <div className="mt-4 pt-4 border-t border-neutral-200">
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="text-xs">
+                        <span className="text-neutral-500 block mb-0.5">Mahkeme:</span>
+                        <span className="font-semibold text-neutral-900 text-sm">{fee?.mahkemeGiderleri || "—"}</span>
                     </div>
-                    <div>
-                        <span className="text-neutral-500">Avukatlık:</span>{" "}
-                        <span className="font-medium">{fee?.avukatlikUcreti || "—"}</span>
+                    <div className="text-xs">
+                        <span className="text-neutral-500 block mb-0.5">Avukatlık:</span>
+                        <span className="font-semibold text-neutral-900 text-sm">{fee?.avukatlikUcreti || "—"}</span>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 ml-auto">
-                    <button className="px-4 py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm shadow">
-                        Müvekkille İletişime Geç
+                {/* Butonlar - Daha yatay ve kompakt */}
+                <div className="flex flex-wrap gap-2">
+                    <button className="flex-1 min-w-[140px] px-3 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-medium shadow-sm transition-colors">
+                        İletişime Geç
                     </button>
-                    <button className="px-4 py-2 rounded-xl bg-white border border-neutral-300 hover:bg-neutral-50 text-sm">
-                        Kaydet / Teklif Ver
+                    <button className="flex-1 min-w-[140px] px-3 py-2 rounded-lg bg-white border border-neutral-300 hover:bg-neutral-50 text-xs font-medium transition-colors">
+                        Teklif Ver
                     </button>
                 </div>
             </div>
 
             {showPlaceholder && (
-                <p className="mt-3 text-xs text-neutral-500">
+                <p className="mt-3 text-xs text-neutral-500 italic">
                     * Bu kart, müvekkil ilanı kaydedince avukatlara böyle görünecektir.
                 </p>
             )}

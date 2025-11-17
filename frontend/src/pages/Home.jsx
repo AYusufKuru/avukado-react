@@ -202,75 +202,155 @@ export default function Home() {
                     subtitle="İhtiyacını seç, ilanını 3 dakikada oluştur."
                     center
                 />
-                <div className="mt-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {/* Ceza Hukuku (ikon yoksa placeholder) */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/ceza hukuku.png" alt="Boşanma/Aile" className="w-full object-contain" />
-                        <div className="mt-3 font-semibold">Ceza Hukuku</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                <div className="mt-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                    {/* Ceza Hukuku */}
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/ceza hukuku.png" 
+                                alt="Ceza Hukuku" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Ceza Hukuku</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* Boşanma / Aile */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/aile.png" alt="Boşanma/Aile" className="w-full object-contain" />
-                        <div className="mt-3 font-semibold">Boşanma/Aile</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/aile.png" 
+                                alt="Boşanma/Aile" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Boşanma/Aile</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* Ticaret */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/ticaret.png" alt="Ticaret" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">Ticaret</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/ticaret.png" 
+                                alt="Ticaret" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Ticaret</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* Miras */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/miras.png" alt="Miras" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">Miras</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/miras.png" 
+                                alt="Miras" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Miras</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* İş Hukuku */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/is-hukuku.png" alt="İş Hukuku" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">İş Hukuku</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/is-hukuku.png" 
+                                alt="İş Hukuku" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">İş Hukuku</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* İcra-İflas */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/icra-iflas.png" alt="İcra-İflas" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">İcra-İflas</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/icra-iflas.png" 
+                                alt="İcra-İflas" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">İcra-İflas</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* Gayrimenkul */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/gayrimenkul.png" alt="Gayrimenkul" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">Gayrimenkul</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/gayrimenkul.png" 
+                                alt="Gayrimenkul" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Gayrimenkul</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* Bilişim */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/bilisim.png" alt="Bilişim" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">Bilişim</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/bilisim.png" 
+                                alt="Bilişim" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Bilişim</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* Tüketici */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/tuketici.png" alt="Tüketici" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">Tüketici</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/tuketici.png" 
+                                alt="Tüketici" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Tüketici</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
 
                     {/* Vergi */}
-                    <div className="rounded-2xl ring-1 ring-slate-200 p-4 bg-white hover:shadow-md transition">
-                        <img src="/img/uzmanliklar/vergi.png" alt="Vergi" className="w-full h-[90px] object-contain" />
-                        <div className="mt-3 font-semibold">Vergi</div>
-                        <div className="text-slate-500 text-sm">—</div>
+                    <div className="rounded-2xl ring-1 ring-slate-200 p-5 bg-white hover:shadow-md transition-all duration-200 flex flex-col">
+                        <div className="flex items-center justify-center h-[110px] mb-4">
+                            <img 
+                                src="/img/uzmanliklar/vergi.png" 
+                                alt="Vergi" 
+                                className="max-w-full max-h-full object-contain object-center select-none pointer-events-none" 
+                            />
+                        </div>
+                        <div className="mt-auto text-center">
+                            <div className="font-semibold text-slate-900 text-sm leading-tight">Vergi</div>
+                            <div className="text-slate-400 text-xs mt-1">—</div>
+                        </div>
                     </div>
                 </div>
             </section>

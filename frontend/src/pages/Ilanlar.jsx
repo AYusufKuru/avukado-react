@@ -43,8 +43,11 @@ export default function Ilanlar() {
     const clientCta = isAuthenticated ? "/ilan/ac" : "/giris";
     const location = useLocation();
     
-    // İlanları API'den çek
-    const { data: adsResponse, isLoading: isLoadingAds, error: adsError } = useGetAdsQuery({ status: "open" });
+    // Aile Hukuku (Boşanma) kategorisindeki ilanları API'den çek
+    const { data: adsResponse, isLoading: isLoadingAds, error: adsError } = useGetAdsQuery({ 
+        category: "aile", 
+        status: "open" 
+    });
     const ads = adsResponse?.data || [];
 
     return (

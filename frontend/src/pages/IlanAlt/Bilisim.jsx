@@ -16,55 +16,25 @@ import {
     MousePointerClick,   // E-Ticaret
     Copyright            // Fikri Mülkiyet, Yazılım
 } from "lucide-react";
-import Baslarken from "../../components/home/Baslarken"; // dosya yapınıza göre doğru
+import Baslarken from "../../components/home/Baslarken";
+import { useGetAdsQuery } from "../../store/api/adsApi";
+import LawyerCard from "../../components/lawyers/LawyerCard";
 
 const NAVY = "#0a2342";
 
-/** Popüler karma ilanlar (örnekler) */
-const POPULAR = [
-    {
-        city: "Ankara",
-        offers: 7,
-        title: "Dolandırıcılık Dosyası",
-        docs: ["Müvekkil beyanı (imzalı)", "Banka hareket dökümü (son 6 ay)", "Yazışma ekran görüntüleri"],
-        price: 450,
-    },
-    {
-        city: "İstanbul",
-        offers: 12,
-        title: "Hakaret Suçu (TCK 125)",
-        docs: ["Dilekçe taslağı", "Tanık listesi (isim & telefon)", "Video/ses delili özeti"],
-        price: 300,
-    },
-    {
-        city: "İzmir",
-        offers: 5,
-        title: "Basit Yaralama (TCK 86)",
-        docs: ["Hastane raporu (Acil özet)", "Olay fotoğrafları", "Polis ifade tutanağı"],
-        price: 600,
-    },
-    {
-        city: "Bursa",
-        offers: 4,
-        title: "Tehdit Suçu (TCK 106)",
-        docs: ["Olay anlatımı", "Mesaj/kayıt dökümleri", "Şikayet dilekçesi"],
-        price: 350,
-    },
-    {
-        city: "Antalya",
-        offers: 3,
-        title: "Yağma (TCK 148)",
-        docs: ["Olay yeri fotoğrafları", "Kamera kayıtları özeti", "Mağdur beyanı"],
-        price: 900,
-    },
-    {
-        city: "Adana",
-        offers: 6,
-        title: "Hırsızlık (TCK 141)",
-        docs: ["Müşteki beyanı", "Eşya listesi ve faturalar", "Asayiş tutanakları"],
-        price: 500,
-    },
-];
+/* Backend category'den frontend area'ya mapping */
+const CATEGORY_TO_AREA = {
+    "aile": "Aile Hukuku",
+    "ceza": "Ceza Hukuku",
+    "ticaret": "Ticaret Hukuku",
+    "miras": "Miras Hukuku",
+    "is-hukuku": "İş Hukuku",
+    "icra-iflas": "İcra-İflas Hukuku",
+    "gayrimenkul": "Gayrimenkul Hukuku",
+    "bilisim": "Bilişim Hukuku",
+    "tuketici": "Tüketici Hukuku",
+    "vergi": "Vergi Hukuku",
+};
 const kategoriler = [
     { ad: "Boşanma", link: "/ilanlar" },
     { ad: "Ceza", link: "/ilanlar/ceza" },
@@ -79,10 +49,17 @@ const kategoriler = [
 ];
 
 export default function Bilisim() {
-    // girişli ise “Dava Başlat” doğrudan /ilan/ac; değilse /giris
+    // girişli ise "Dava Başlat" doğrudan /ilan/ac; değilse /giris
     const token = useMemo(() => localStorage.getItem("avukado_token"), []);
     const clientCta = token ? "/ilan/ac" : "/giris";
     const location = useLocation();
+    
+    // Bilişim kategorisindeki ilanları API'den çek
+    const { data: adsResponse, isLoading: isLoadingAds, error: adsError } = useGetAdsQuery({ 
+        category: "bilisim", 
+        status: "open" 
+    });
+    const ads = adsResponse?.data || [];
 
     return (
         <div className="min-h-screen bg-white text-neutral-900">
@@ -233,78 +210,52 @@ export default function Bilisim() {
                 <Baslarken clientCtaTo={clientCta} lawyerCtaTo="/giris" />
             </section>
 
-            {/* ----------------- POPÜLER BİLİŞİM İLANLARI ----------------- */}
+            {/* ----------------- BİLİŞİM HUKUKU İLANLARI ----------------- */}
             <section className="bg-neutral-50 py-12">
                 <div className="mx-auto max-w-7xl px-4">
                     <div className="mb-8 text-center">
                         <h2 className="text-2xl md:text-3xl font-bold" style={{ color: NAVY }}>
-                            Popüler Bilişim İlanları
+                            Bilişim Hukuku İlanları
                         </h2>
                         <p className="mt-2 text-neutral-600">
-                            Öne çıkan ilanları keşfedin ve tahmini fiyatları hızlıca görüntüleyin.
+                            Müvekkillerin oluşturduğu bilişim hukuku ilanlarını keşfedin ve teklif verin.
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {POPULAR.map((card, idx) => ( // POPULAR verisi artık Bilişim odaklı
-                            <article
-                                key={`${card.title}-${idx}`}
-                                className="flex min-h-[320px] flex-col justify-between rounded-2xl border bg-white p-6 shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
-                                style={{ borderColor: `${NAVY}22` }}
-                            >
-                                <div className="flex items-start justify-between text-sm text-neutral-600">
-                                    <div className="flex items-center gap-2">
-                                        <svg
-                                            viewBox="0 0 24 24"
-                                            width={18}
-                                            height={18}
-                                            fill="none"
-                                            stroke="currentColor"
-                                            strokeWidth={1.8}
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            aria-hidden="true"
-                                        >
-                                            <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 1 1 18 0Z" />
-                                            <circle cx="12" cy="10" r="3" />
-                                        </svg>
-                                        <span>
-                                            {card.city} • {card.offers} teklif
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="mt-2">
-                                    <h3 className="text-lg font-semibold" style={{ color: NAVY }}>
-                                        {card.title}
-                                    </h3>
-                                    <div className="my-3 h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
-                                    <ul className="list-disc space-y-2 pl-5 text-sm text-neutral-700">
-                                        {card.docs.map((d, i) => (
-                                            <li key={`${card.title}-doc-${i}`}>{d}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                <div className="mt-4 flex items-center justify-between">
-                                    <span
-                                        className="rounded-full border px-3 py-1 text-xs font-bold"
-                                        style={{ borderColor: `${NAVY}22`, color: NAVY }}
-                                    >
-                                        ₺{card.price}
-                                    </span>
-                                    <a // <Link> etiketi <a> olarak değiştirildi
-                                        href={token ? `/ilan/${encodeURIComponent(card.title)}` : "/giris"} // 'to' prop'u 'href' olarak değiştirildi
-                                        className="rounded-xl px-4 py-2 text-sm font-bold text-white shadow"
-                                        style={{ backgroundColor: NAVY }}
-                                        aria-label={`${card.title} ilanını görüntüle`}
-                                    >
-                                        Görüntüle
-                                    </a>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
+                    {isLoadingAds ? (
+                        <div className="text-center py-12">
+                            <p className="text-neutral-600">İlanlar yükleniyor...</p>
+                        </div>
+                    ) : adsError ? (
+                        <div className="text-center py-12">
+                            <p className="text-red-600">İlanlar yüklenirken bir hata oluştu.</p>
+                        </div>
+                    ) : ads.length === 0 ? (
+                        <div className="text-center py-12">
+                            <p className="text-neutral-600">Henüz bilişim hukuku kategorisinde açık ilan bulunmamaktadır.</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {ads.map((ad) => {
+                                const area = CATEGORY_TO_AREA[ad.category] || ad.category;
+                                const fileCount = ad.documents?.length || 0;
+                                
+                                return (
+                                    <LawyerCard
+                                        key={ad._id}
+                                        title={ad.title}
+                                        area={area}
+                                        sub=""
+                                        city={ad.city}
+                                        details={ad.description}
+                                        fileCount={fileCount}
+                                        fee={null}
+                                        showPlaceholder={false}
+                                    />
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </section>
         </div>
