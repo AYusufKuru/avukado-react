@@ -1,8 +1,29 @@
 // src/services/api.js
 
-// .env yoksa Node.js Express backend portuna düş (3000). Sondaki '/' varsa kaldır.
-const RAW_BASE = (import.meta.env.VITE_API_URL || "http://localhost:3000").trim();
-const BASE_URL = RAW_BASE.replace(/\/+$/, "");
+// Backend URL belirleme: Production'da aynı origin kullan, development'ta localhost
+function getBaseUrl() {
+    // Environment variable varsa onu kullan (öncelikli)
+    if (import.meta.env.VITE_API_URL) {
+        return import.meta.env.VITE_API_URL.trim().replace(/\/+$/, "");
+    }
+    
+    // Production ortamında (deployed) aynı origin kullan
+    const currentOrigin = window.location.origin;
+    const isProduction = currentOrigin.includes('sevalla.app') || 
+                         currentOrigin.includes('vercel.app') ||
+                         (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
+    
+    if (isProduction) {
+        // Production'da backend aynı domain'de çalışıyor
+        // https://avukado-9ua7p.sevalla.app -> https://avukado-9ua7p.sevalla.app/api/...
+        return currentOrigin;
+    }
+    
+    // Development'ta localhost kullan
+    return "http://localhost:3000";
+}
+
+const BASE_URL = getBaseUrl();
 
 export const endpoints = {
     login: "/api/Auth/login",
