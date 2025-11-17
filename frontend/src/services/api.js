@@ -1,29 +1,10 @@
 // src/services/api.js
 
-// Backend URL belirleme: Production'da aynı origin kullan, development'ta localhost
-function getBaseUrl() {
-    // Environment variable varsa onu kullan (öncelikli)
-    if (import.meta.env.VITE_API_URL) {
-        return import.meta.env.VITE_API_URL.trim().replace(/\/+$/, "");
-    }
-    
-    // Production ortamında (deployed) aynı origin kullan
-    const currentOrigin = window.location.origin;
-    const isProduction = currentOrigin.includes('sevalla.app') || 
-                         currentOrigin.includes('vercel.app') ||
-                         (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1');
-    
-    if (isProduction) {
-        // Production'da backend aynı domain'de çalışıyor
-        // https://avukado-9ua7p.sevalla.app -> https://avukado-9ua7p.sevalla.app/api/...
-        return currentOrigin;
-    }
-    
-    // Development'ta localhost kullan
-    return "http://localhost:3000";
-}
-
-const BASE_URL = getBaseUrl();
+// Backend Base URL
+// Development: http://localhost:3000
+// Production: VITE_API_URL environment variable ile veya burayı elle değiştirin
+// Örnek production: "https://avukado-9ua7p.sevalla.app"
+const BASE_URL = ("https://avukado-9ua7p.sevalla.app").trim().replace(/\/+$/, "");
 
 export const endpoints = {
     login: "/api/Auth/login",
