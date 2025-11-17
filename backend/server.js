@@ -33,6 +33,7 @@ app.use(cors({
             "http://localhost:5175",
             "http://localhost:5176",
             "http://localhost:3000",
+            "https://avukado-9ua7p.sevalla.app",
             // Sevalla domain'leri
             /^https?:\/\/.*\.sevalla\.app$/,
             /^https?:\/\/.*\.vercel\.app$/,
