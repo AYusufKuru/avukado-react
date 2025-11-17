@@ -1,8 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getToken } from "../../services/api";
 
-// .env yoksa Node.js Express backend portuna düş (3000). Sondaki '/' varsa kaldır.
-const RAW_BASE = (import.meta.env.VITE_API_URL || "http://localhost:3000").trim();
+// Backend Base URL
+// Development: http://localhost:3000
+// Production: VITE_API_URL environment variable ile veya burayı elle değiştirin
+// Örnek production: "https://avukado-9ua7p.sevalla.app"
+const RAW_BASE = ("https://avukado-9ua7p.sevalla.app").trim();
 export const BASE_URL = RAW_BASE.replace(/\/+$/, "");
 
 export const baseApi = createApi({
